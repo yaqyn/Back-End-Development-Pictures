@@ -80,9 +80,20 @@ def test_update_picture_by_id(client, picture):
     res_picture["event_state"] = new_state
     res = client.put(f'/picture/{id}', data=json.dumps(res_picture),
                      content_type="application/json")
-    res.status_code == 200
+    assert res.status_code == 200
     res = client.get(f'/picture/{id}')
     assert res.json['event_state'] == new_state
+
+
+def test_update_picture_keeps_route_id(client, picture):
+    picture["id"] = 999
+
+    res = client.put("/picture/3", json=picture)
+
+    assert res.status_code == 200
+    assert res.json["id"] == 3
+    assert client.get("/picture/3").json["id"] == 3
+    assert client.get("/picture/999").status_code == 404
 
 def test_delete_picture_by_id(client):
     res = client.get("/count")

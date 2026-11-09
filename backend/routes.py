@@ -75,15 +75,16 @@ def create_picture():
 
 @app.route("/picture/<int:id>", methods=["PUT"])
 def update_picture(id):
-    """Replace an existing picture."""
+    """Replace an existing picture while keeping the route id authoritative."""
     picture = request.get_json(silent=True)
     if not isinstance(picture, dict):
         return {"message": "invalid picture payload"}, 400
 
     for index, existing in enumerate(data):
         if existing["id"] == id:
-            data[index] = picture
-            return jsonify(picture), 200
+            updated_picture = {**picture, "id": id}
+            data[index] = updated_picture
+            return jsonify(updated_picture), 200
 
     return {"message": "picture not found"}, 404
 
