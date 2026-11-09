@@ -1,5 +1,7 @@
 import json
 
+from backend import routes
+
 def test_health(client):
     res = client.get("/health")
     assert res.status_code == 200
@@ -9,6 +11,15 @@ def test_count(client):
     res = client.get("/count")
     assert res.status_code == 200
     assert res.json['length'] == 10
+
+
+def test_count_reports_zero_for_empty_collection(client, monkeypatch):
+    monkeypatch.setattr(routes, "data", [])
+
+    res = client.get("/count")
+
+    assert res.status_code == 200
+    assert res.json == {"length": 0}
 
 
 def test_data_contains_10_pictures(client):

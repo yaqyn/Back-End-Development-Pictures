@@ -24,10 +24,7 @@ def health():
 @app.route("/count")
 def count():
     """return length of data"""
-    if data:
-        return jsonify(length=len(data)), 200
-
-    return {"message": "Internal server error"}, 500
+    return jsonify(length=len(data)), 200
 
 
 ######################################################################
